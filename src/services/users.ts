@@ -11,6 +11,5 @@ type JwtData = {
 };
 export const detachToken = (token: string): JwtData => {
   const decodedToken = jwt.verify(token, process.env.SECRET_KEY || '') as JwtData;
-  const userId = decodedToken.userId;
   return decodedToken;
 }
