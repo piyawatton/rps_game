@@ -1,13 +1,13 @@
-import { Action } from "./enum";
+import { Choice } from "./enum";
 
 interface ScoreLog {
-  id: string;
+  id?: string;
   score_id: string;
-  player_action: Action;
-  bot_action: Action;
+  player_action: Choice;
+  bot_action: Choice;
   previous_score: number;
   current_score: number;
-  created_at: Date;
+  created_at?: Date;
 }
 
 export default ScoreLog;

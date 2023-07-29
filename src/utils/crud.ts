@@ -52,7 +52,25 @@ async function getRecordByColumn<T>(table: Table, column: keyof T, value: string
   }
 }
 
-async function updateRecord<T>(table: Table, id: string, data: T): Promise<void> {
+type Filter<T> = Partial<{
+  [K in keyof T]: string;
+}>;
+async function getRecordByColumns<T>(table: Table, filter: Filter<T>): Promise<T | null> {
+  try {
+    const columns = Object.keys(filter).join(', ');
+    const values = Object.values(filter);
+
+    const query = `SELECT * FROM "${table}" WHERE (${columns}) = (${values.map((_, i) => `$${i + 1}`).join(', ')})`;
+    const record = await db.oneOrNone<T>(query, values);
+    return record;
+  } catch (error) {
+    console.error(`Error getting record from ${table} table by columns:`, error);
+    throw error;
+  }
+}
+
+
+async function updateRecord<T>(table: Table, id: string, data: Partial<T>): Promise<void> {
   try {
     const setColumns = Object.keys(data).map((key, index) => `"${key}" = $${index + 2}`).join(', ');
     const values = [id, ...Object.values(data)];
@@ -80,6 +98,7 @@ export {
   getAllRecords,
   getRecordById,
   getRecordByColumn,
+  getRecordByColumns,
   updateRecord,
   deleteRecord,
 };

@@ -6,7 +6,7 @@ import User from '@/src/type/User';
 import { omitUserPassword } from '@/src/services/users';
 import { withMethod } from './middleware';
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { username, password } = req.body;
   const user = await getRecordByColumn<User>('User', 'name', username);
   if (!user) {
@@ -16,7 +16,7 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
     })
   }
   if (user.password === password) {
-    const token = jwt.sign({ userId: user.id }, 'your-secret-key', {
+    const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY || '', {
       expiresIn: '3d', // Token expiration time (optional)
     });
     return res.json({

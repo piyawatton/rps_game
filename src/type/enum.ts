@@ -1,4 +1,4 @@
-export enum Action {
+export enum Choice {
   ROCK = 'ROCK',
   PAPER = 'PAPER',
   SCISSORS = 'SCISSORS',

@@ -5,8 +5,9 @@ export function withAuth(
   handler: NextApiHandler
 ): NextApiHandler {
   return (req, res) => {
+    console.log('req.headers',req.headers.authorization);
     if (req.headers.authorization) {
-      handler(req, res)
+      return handler(req, res)
     }
     return res.json({
       success: false,
@@ -20,13 +21,21 @@ export function withMethod(
   methods: string[],
 ): NextApiHandler {
   return (req, res) => {
-    if (methods.includes(req.method || '')) {
-      handler(req, res)
+    try {
+      if (methods.includes(req.method || '')) {
+        return handler(req, res)
+      }
+      return res.json({
+        success: false,
+        message: 'Method not allow',
+      })
+    } catch (e) {
+      console.log('withMethod : error', e);
+      return res.json({
+        success: false,
+        message: 'Internal error',
+      })
     }
-    return res.json({
-      success: false,
-      message: 'Method not allow',
-    })
   }
 }
 
