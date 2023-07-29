@@ -15,12 +15,18 @@ import ScoreLog from '@/src/type/ScoreLog';
 
 const playing = async (req: NextApiRequest, res: NextApiResponse, currentScore: Score) => {
   const scoreId = currentScore?.id || '';
+  const playerChoice = req.body.player_action;
+  if (!playerChoice) {
+    return res.json({
+      success: false,
+      message: 'No player action',
+    })
+  }
   function getRandomChoice(): Choice {
     const choices = Object.values(Choice);
     const randomIndex = Math.floor(Math.random() * choices.length);
     return choices[randomIndex];
   }
-  const playerChoice = req.body.player_action;
   const botChoice = getRandomChoice();
   const isPlayerWin = (
     (playerChoice === Choice.ROCK && botChoice === Choice.SCISSORS) ||
@@ -32,31 +38,35 @@ const playing = async (req: NextApiRequest, res: NextApiResponse, currentScore: 
     const newScore = (currentScore?.score || 0) + 1
     await updateRecord<Score>('Score', scoreId, { score: newScore })
     const score = await getRecordById<Score>('Score', scoreId)
-    const scoreLog = await createRecord<ScoreLog>('Score_Log', {
+    const scoreLogId = await createRecord<ScoreLog>('Score_Log', {
       score_id: scoreId,
       previous_score: currentScore?.score || 0,
       current_score: newScore,
       player_action: playerChoice,
       bot_action: botChoice,
     })
+    const scoreLog = await getRecordById<ScoreLog>('Score_Log', scoreLogId);
     return res.json({
       success: true,
       data: {
+        result: 'WIN',
         score,
         scoreLog,
       },
     })
   } else if (isTie) {
-    const scoreLog = await createRecord<ScoreLog>('Score_Log', {
+    const scoreLogId = await createRecord<ScoreLog>('Score_Log', {
       score_id: currentScore?.id || '',
       previous_score: currentScore?.score || 0,
       current_score: currentScore?.score || 0,
       player_action: playerChoice,
       bot_action: botChoice,
     })
+    const scoreLog = await getRecordById<ScoreLog>('Score_Log', scoreLogId);
     return res.json({
       success: true,
       data: {
+        result: 'TIE',
         score: currentScore,
         scoreLog,
       },
@@ -64,16 +74,18 @@ const playing = async (req: NextApiRequest, res: NextApiResponse, currentScore: 
   } else {
     await updateRecord<Score>('Score', currentScore?.id || '', { status: ScoreStatus.COMPLETED })
     const score = await getRecordById<Score>('Score', scoreId)
-    const scoreLog = await createRecord<ScoreLog>('Score_Log', {
+    const scoreLogId = await createRecord<ScoreLog>('Score_Log', {
       score_id: currentScore?.id || '',
       previous_score: currentScore?.score || 0,
       current_score: currentScore?.score || 0,
       player_action: playerChoice,
       bot_action: botChoice,
     })
+    const scoreLog = await getRecordById<ScoreLog>('Score_Log', scoreLogId);
     return res.json({
       success: true,
       data: {
+        result: 'LOSE',
         score,
         scoreLog,
       },
