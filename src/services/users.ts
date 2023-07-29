@@ -1,12 +1,8 @@
-import { AxiosInstance } from "../lib/Axios"
-import { User } from "../type/User"
+import User from "../type/User"
 
-export async function getUsers() {
-  const res = await AxiosInstance.get<User[]>('/users')
-  return res.data
+export const omitUserPassword = (user: User): Omit<User, "password"> => {
+  const { password, ...omitPasswordUser } = user;
+  return omitPasswordUser;
 }
 
-export async function getUserById(id: string) {
-  const res = await AxiosInstance.get<User>(`/users/${id}`)
-  return res.data
-}
+
