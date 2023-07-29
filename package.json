@@ -1,0 +1,39 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "license": "piyawat.chutimavutikul@gmail.com",
+  "private": true,
+  "scripts": {
+    "migrate": "node-pg-migrate",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ant-design/cssinjs": "^1.13.2",
+    "@ant-design/icons": "^5.1.4",
+    "@tanstack/react-query": "^4.32.0",
+    "@tanstack/react-query-devtools": "^4.32.0",
+    "@tanstack/react-query-next-experimental": "^5.0.0-alpha.80",
+    "@types/next-pwa": "^5.6.4",
+    "@types/node": "20.4.2",
+    "@types/react": "18.2.15",
+    "@types/react-dom": "18.2.7",
+    "antd": "^5.7.2",
+    "axios": "^1.4.0",
+    "next": "13.4.11",
+    "next-pwa": "^5.6.0",
+    "node-pg-migrate": "^6.2.2",
+    "pg": "^8.11.1",
+    "pg-hstore": "^2.3.4",
+    "pg-promise": "^11.5.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "styled-components": "^6.0.5",
+    "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.10.2"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "lastRun": "1690642439916_create-user-table.js",
+  "migrations": [
+    {
+      "title": "1690642439916_create-user-table.js",
+      "timestamp": 1690644102853
+    },
+    {
+      "title": "1690642539949_create-score-table.js",
+      "timestamp": null
+    },
+    {
+      "title": "1690642645041_create-score-log-table.js",
+      "timestamp": null
+    }
+  ]
+}
