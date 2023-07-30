@@ -32,7 +32,7 @@ const LoginForm = () => {
   };
 
   return (
-    <Form<User> onFinish={handleSubmit}>
+    <Form<User> onFinish={handleSubmit} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
       <Form.Item label="Username" name="name">
         <Input />
       </Form.Item>
