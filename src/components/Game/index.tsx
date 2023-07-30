@@ -95,17 +95,28 @@ const Game = () => {
           loading={playMutation.isLoading}
           style={{ width: 80 }}
         />
-        {isReadyToPlay ? (
-          <Spin spinning={playMutation.isLoading}>
-            {renderChoice(Choice.ROCK)}
-            {renderChoice(Choice.PAPER)}
-            {renderChoice(Choice.SCISSORS)}
-          </Spin>
-        ) : (
-          <>
-            <Button onClick={() => { gameStartMutation.mutate() }}>Start</Button>
-          </>
-        )}
+        <div>
+          {isReadyToPlay ? (
+            <div>
+              <Spin spinning={playMutation.isLoading}>
+                {renderChoice(Choice.ROCK)}
+                {renderChoice(Choice.PAPER)}
+                {renderChoice(Choice.SCISSORS)}
+              </Spin>
+            </div>
+          ) : (
+            <div>
+              <Button
+                size="large"
+                disabled={isFetching}
+                onClick={() => { gameStartMutation.mutate() }}
+              >
+                <Spin spinning={isFetching} />
+                {isFetching ? 'Loading..' : 'Start'}
+              </Button>
+            </div>
+          )}
+        </div>
       </Col>
     </Row>
   );

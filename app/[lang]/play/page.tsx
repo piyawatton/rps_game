@@ -1,15 +1,12 @@
-import { Col, Row } from 'antd';
-import { FullScreenHeight } from "@/src/components/Base/index.styled";
+import { ContentCenter, FullScreenHeight } from "@/src/components/Base/index.styled";
 import Game from '@/src/components/Game';
 
 export default async function HomePage() {
   return (
     <FullScreenHeight>
-      <Row align="bottom" justify="center">
-        <Col>
-          <Game />
-        </Col>
-      </Row>
+      <ContentCenter>
+        <Game />
+      </ContentCenter>
     </FullScreenHeight>
   )
 }
