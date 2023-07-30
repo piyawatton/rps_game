@@ -20,3 +20,5 @@ export type PlayResponse = BaseResponse<{
   score: Score;
   scoreLog: ScoreLog[];
 }>
+
+export type RankingResponse = BaseResponse<(Score & UserInfo)[]>

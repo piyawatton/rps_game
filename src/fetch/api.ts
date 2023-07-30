@@ -2,7 +2,7 @@ import { AxiosInstance } from "../lib/Axios"
 import { BaseResponse } from "../type/BaseResponse"
 import Score from "../type/Score"
 import User, { UserInfo } from "../type/User"
-import { PlayRequest, PlayResponse, ProfileResponse } from "../type/api"
+import { PlayRequest, PlayResponse, ProfileResponse, RankingResponse } from "../type/api"
 
 export async function getProfile() {
   const res = await AxiosInstance.get<ProfileResponse>(`/api/profile`)
@@ -31,5 +31,10 @@ export async function play(payload: PlayRequest) {
 
 export async function start() {
   const res = await AxiosInstance.post<PlayResponse>('/api/play');
+  return res.data
+}
+
+export async function getRanking() {
+  const res = await AxiosInstance.get<RankingResponse>('/api/score');
   return res.data
 }

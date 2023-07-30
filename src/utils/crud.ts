@@ -53,22 +53,80 @@ async function getRecordByColumn<T>(table: Table, column: keyof T, value: string
   }
 }
 
+export type Condition<T> = {
+  column?: keyof T,
+  value?: string,
+  orderByColumn: keyof T,
+  orderByDirection: OrderByDirection;
+  limit?: number;
+  offset?: number;
+  joinTable?: Table; // New property for the join table name
+  joinOnColumn?: keyof T; // New property for the column to join on
+
+}
+
 async function getRecordsByColumn<T>(
   table: Table,
-  column: keyof T,
-  value: string,
-  orderByColumn: keyof T,
-  orderByDirection: OrderByDirection = OrderByDirection.ASC
+  conditions: Condition<T>
 ): Promise<T[] | null> {
+  const {
+    column,
+    value,
+    orderByColumn,
+    orderByDirection = OrderByDirection.ASC,
+    limit,
+    offset,
+    joinTable,
+    joinOnColumn,
+  } = conditions;
+
   try {
-    const query = `SELECT * FROM "${table}" WHERE "${column as string}" = $1 ORDER BY "${orderByColumn as string}" ${orderByDirection}`;
+    const getTableAlias = (tableName: Table) => `tbl_${tableName}`
+    // Use the provided table alias or the original table name
+    const tableAlias = getTableAlias(table);
+    const tableAliasOrName = `"${table}" AS ${tableAlias}`;
+
+    const tableJoinAlias = joinTable ? getTableAlias(joinTable) : '';
+    const tableJoinName = joinTable ? `"${joinTable}" AS ${tableJoinAlias}` : '';
+
+    let query = `SELECT ${tableAlias}.*`;
+
+    if (joinTable && joinOnColumn) {
+      query += `, ${tableJoinAlias}.*`;
+    }
+
+    query += ` FROM ${tableAliasOrName}`;
+
+    if (joinTable && joinOnColumn) {
+      query += `
+        JOIN ${tableJoinName}
+        ON ${tableAlias}.${joinOnColumn as string} = ${tableJoinAlias}.id
+      `;
+    }
+
+    if (column && value) {
+      query += ` WHERE ${tableAlias}.${column as string} = $1`;
+    }
+
+    query += ` ORDER BY ${tableAlias}.${orderByColumn as string} ${orderByDirection}`;
+
+    if (limit !== undefined) {
+      query += ` LIMIT ${limit}`;
+    }
+
+    if (offset !== undefined) {
+      query += ` OFFSET ${offset}`;
+    }
+    console.log('query',query);
+    
     const record = await db.many<T>(query, value);
     return record;
   } catch (error) {
-    console.error(`Error getting record from ${table} table by ID:`, error);
-    throw error;
+    console.error(`Error getting record from ${table} table:`, error);
+    return null;
   }
 }
+
 
 type Filter<T> = Partial<{
   [K in keyof T]: string;

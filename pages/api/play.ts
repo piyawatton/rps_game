@@ -42,7 +42,12 @@ const playing = async (req: NextApiRequest, res: NextApiResponse, currentScore: 
       player_action: playerChoice,
       bot_action: botChoice,
     })
-    const scoreLog = await getRecordsByColumn<ScoreLog>('Score_Log', 'score_id', scoreId, 'created_at', OrderByDirection.DESC);
+    const scoreLog = await getRecordsByColumn<ScoreLog>('Score_Log', {
+      column: 'score_id',
+      value: scoreId,
+      orderByColumn: 'created_at',
+      orderByDirection: OrderByDirection.DESC,
+    });
     return res.json({
       success: true,
       data: {
@@ -59,7 +64,12 @@ const playing = async (req: NextApiRequest, res: NextApiResponse, currentScore: 
       player_action: playerChoice,
       bot_action: botChoice,
     })
-    const scoreLog = await getRecordsByColumn<ScoreLog>('Score_Log', 'score_id', scoreId, 'created_at', OrderByDirection.DESC);
+    const scoreLog = await getRecordsByColumn<ScoreLog>('Score_Log', {
+      column: 'score_id',
+      value: scoreId,
+      orderByColumn: 'created_at',
+      orderByDirection: OrderByDirection.DESC,
+    });
     return res.json({
       success: true,
       data: {
@@ -78,7 +88,12 @@ const playing = async (req: NextApiRequest, res: NextApiResponse, currentScore: 
       player_action: playerChoice,
       bot_action: botChoice,
     })
-    const scoreLog = await getRecordsByColumn<ScoreLog>('Score_Log', 'score_id', scoreId, 'created_at', OrderByDirection.DESC);
+    const scoreLog = await getRecordsByColumn<ScoreLog>('Score_Log', {
+      column: 'score_id',
+      value: scoreId,
+      orderByColumn: 'created_at',
+      orderByDirection: OrderByDirection.DESC,
+    });
     return res.json({
       success: true,
       data: {
