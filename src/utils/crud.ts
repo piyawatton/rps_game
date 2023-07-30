@@ -1,5 +1,6 @@
 // crud.ts
 
+import { OrderByDirection } from '../type/enum';
 import db from './db';
 
 type Table = 'User' | 'Score' | 'Score_Log';
@@ -45,6 +46,23 @@ async function getRecordByColumn<T>(table: Table, column: keyof T, value: string
   try {
     const query = `SELECT * FROM "${table}" WHERE "${column as string}" = $1`;
     const record = await db.oneOrNone<T>(query, value);
+    return record;
+  } catch (error) {
+    console.error(`Error getting record from ${table} table by ID:`, error);
+    throw error;
+  }
+}
+
+async function getRecordsByColumn<T>(
+  table: Table,
+  column: keyof T,
+  value: string,
+  orderByColumn: keyof T,
+  orderByDirection: OrderByDirection = OrderByDirection.ASC
+): Promise<T[] | null> {
+  try {
+    const query = `SELECT * FROM "${table}" WHERE "${column as string}" = $1 ORDER BY "${orderByColumn as string}" ${orderByDirection}`;
+    const record = await db.many<T>(query, value);
     return record;
   } catch (error) {
     console.error(`Error getting record from ${table} table by ID:`, error);
@@ -98,6 +116,7 @@ export {
   getAllRecords,
   getRecordById,
   getRecordByColumn,
+  getRecordsByColumn,
   getRecordByColumns,
   updateRecord,
   deleteRecord,

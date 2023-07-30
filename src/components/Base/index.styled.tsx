@@ -22,3 +22,6 @@ export const ContentCenter = styled.div`
   height: 100dvh;
   align-items: center;
 `;
+export const TextCenter = styled.div`
+  text-align: center;
+`;

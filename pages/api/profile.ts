@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import {
-  createRecord,
-  getRecordByColumn,
   getRecordById,
 } from '@/src/utils/crud';
 import User from '@/src/type/User';

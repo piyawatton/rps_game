@@ -14,7 +14,7 @@ const UserInfoSection: React.FC<UserInfoSectionProps> = () => {
   const router = useRouter();
   const { data: profile, isFetching } = useQuery(['profile'], getProfile, { refetchOnWindowFocus: false });
   return (
-    <Card title={profile?.data?.user.name} loading={isFetching}>
+    <Card title={profile?.data?.user.name} style={{ maxWidth: 400 }} loading={isFetching}>
       <p>
         <strong>Highscore:</strong> {profile?.data?.highScore}
       </p>
