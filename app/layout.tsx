@@ -38,10 +38,10 @@ export default function RootLayout({
         <meta name="theme-color" content="#A4BFA7" />
 
         <link rel="shortcut icon" href="/assets/app-icon.ico" />
-        <link rel="apple-touch-icon" href="/assets/app-icon.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/assets/app-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/assets/app-icon.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/assets/app-icon.png" />
+        <link rel="apple-touch-icon" href="/assets/paper.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/assets/paper.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/paper.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/paper.png" />
         <link rel="manifest" href="/assets/manifest.json" />
       </head>
       <body className={font.className}

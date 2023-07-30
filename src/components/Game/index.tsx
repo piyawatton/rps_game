@@ -14,8 +14,6 @@ import React from 'react';
 import { play, playStatus, start } from '@/src/fetch/api';
 import { Choice, ScoreStatus } from '@/src/type/enum';
 import ScoreLogList from '../ScoreLog';
-import ScoreLog from '@/src/type/ScoreLog';
-
 
 const Game = () => {
   const router = useRouter();

@@ -10,7 +10,7 @@ const antdTheme: ThemeConfigType = {
     fontFamily: font.style.fontFamily,
     colorPrimary: theme.primaryColor,
     colorText: theme.textPrimaryColor,
-    colorFillSecondary: theme.secondaryColor,
+    colorFillSecondary: theme.primaryColorLighter,
     colorLink: theme.secondaryColor,
     boxShadow: `
       0 1px 2px -2px ${theme.secondaryColor}29, 

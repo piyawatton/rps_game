@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server'
+import cookie from 'cookie';
 
 const DEFAULT_LOCALE = 'en';
 let locales = ['en', 'nl']
@@ -14,11 +15,24 @@ export function middleware(request: NextRequest) {
   const pathnameIsMissingLocale = locales.every(
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   )
-
+  const cookies = cookie.parse(`${request.cookies}`)
+  const isAuth = cookies.auth !== undefined;
+  if (pathname.endsWith('/play') && !isAuth) {
+    return NextResponse.redirect(
+      new URL(`/`, request.url)
+    )
+  }
+  const isRootPath = locales.some(
+    (locale) => pathname.endsWith(`/${locale}`)
+    )
+    const locale = getLocale(request)
+  if (isRootPath && isAuth) {
+    return NextResponse.redirect(
+      new URL(`/${locale}/play`, request.url)
+    )
+  }
   // Redirect if there is no locale
   if (pathnameIsMissingLocale) {
-    const locale = getLocale(request)
-    
     // e.g. incoming request is /products
     // The new URL is now /en-US/products
     return NextResponse.redirect(
