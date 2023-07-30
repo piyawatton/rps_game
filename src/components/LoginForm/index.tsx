@@ -1,6 +1,6 @@
 'use client'
 
-import { Form, Input, Button, notification } from 'antd';
+import { Form, Input, Button, notification, Space } from 'antd';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
@@ -40,9 +40,14 @@ const LoginForm = () => {
         <Input.Password />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Login
-        </Button>
+        <Space>
+          <Button type="default" onClick={() => { router.push('/register') }}>
+            Register
+          </Button>
+          <Button type="primary" htmlType="submit">
+            Login
+          </Button>
+        </Space>
       </Form.Item>
     </Form>
   );

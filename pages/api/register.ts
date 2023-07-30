@@ -10,14 +10,14 @@ import { omitUserPassword } from '@/src/services/users';
 import { withMethod } from './middleware';
 
 export async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const existingUser = await getRecordByColumn<User>('User', 'name', req.body.username);
+  const existingUser = await getRecordByColumn<User>('User', 'name', req.body.name);
   if (existingUser) {
     return res.json({
       success: false,
-      message: 'Register unsuccessful',
+      message: 'User is already existing.',
     })
   }
-  const userId = await createRecord<User>('User', { name: req.body.username, password: req.body.password });
+  const userId = await createRecord<User>('User', { name: req.body.name, password: req.body.password });
   const user = await getRecordById<User>('User', userId);
   if (user) {
     return res.json({

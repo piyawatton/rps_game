@@ -12,3 +12,8 @@ export async function login(credentials: { username: string; password: string })
   const res = await AxiosInstance.post<BaseResponse<UserInfo> & { token?: string }>('/api/login', credentials);
   return res.data
 }
+
+export async function register(payload: User) {
+  const res = await AxiosInstance.post<BaseResponse<UserInfo>>('/api/register', payload);
+  return res.data
+}
