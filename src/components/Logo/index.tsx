@@ -1,8 +1,12 @@
+'use client'
+
 import { Button, Space } from 'antd';
+import Cookies from 'js-cookie';
 import * as React from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { styled } from 'styled-components';
+import { UserInfo } from '@/src/type/User';
 
 interface ILogoProps {
 }
@@ -14,14 +18,25 @@ const StyledButton = styled(Button)`
 
 const Logo: React.FunctionComponent<ILogoProps> = () => {
   const router = useRouter();
+  const pathname = usePathname();
+  const [title, setTitle] = React.useState('');
+  const userInfoStr = Cookies.get('userInfo') as string | undefined;
+  const userInfo = userInfoStr ? JSON.parse(userInfoStr) : undefined as UserInfo | undefined
+
+  React.useEffect(() => {
+    setTitle(typeof window !== 'undefined' && userInfo ? `Hi! ${userInfo.name}` : '')
+  }, [pathname]);
   return (
-    <StyledButton style={{boxShadow: '1'}} type="text" onClick={() => { router.push('/') }}>
-      <Image src="/assets/rock.png" alt="logo" width={21} height={21} />
-      <Image src="/assets/paper.png" alt="logo" width={21} height={21} />
-      <Image src="/assets/scissors.png" alt="logo" width={21} height={21} />
-      {/* <Space align="center">
-      </Space> */}
-    </StyledButton>
+    <Space>
+      <StyledButton style={{ boxShadow: '1' }} type="text" onClick={() => { router.push('/') }}>
+        <Image src="/assets/rock.png" alt="logo" width={21} height={21} />
+        <Image src="/assets/paper.png" alt="logo" width={21} height={21} />
+        <Image src="/assets/scissors.png" alt="logo" width={21} height={21} />
+      </StyledButton>
+      <div style={{ margin: '0 10px' }}>
+        {title}
+      </div>
+    </Space>
   );
 };
 
