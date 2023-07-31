@@ -116,6 +116,13 @@ const playing = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const startPlay = async (req: NextApiRequest, res: NextApiResponse) => {
   const jwtData = detachToken(req.headers.authorization || '');
+  const onGoingScore = await getRecordByColumns<Score>('Score', { status: ScoreStatus.ONGOING, user_id: jwtData.userId });
+  if (onGoingScore) {
+    return res.json({
+      success: false,
+      message: 'You already have start game',
+    });
+  }
   const scoreId = await createRecord<Score>('Score', { score: 0, user_id: jwtData.userId, status: ScoreStatus.ONGOING })
   const score = await getRecordById<Score>('Score', scoreId);
   if (score) {
