@@ -34,8 +34,6 @@ export async function handler(req: NextApiRequest, res: NextApiResponse<BaseResp
       data: globalHighScore || [],
     })
   }
-  console.log(globalHighScore);
-
   res.json({
     success: false,
     message: 'Something went wrong'

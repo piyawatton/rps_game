@@ -68,7 +68,7 @@ const Game = () => {
     return (
       <Image
         onClick={() => {
-          playMutation.mutate({ player_action: choice, score_id: currentScore?.data?.id })
+          playMutation.mutate({ player_action: choice, score_id: currentScore?.data?.score?.id })
         }}
         src={`/assets/${choice.toLowerCase()}.png`}
         alt={`/assets/${choice.toLowerCase()}.png`}
@@ -85,7 +85,7 @@ const Game = () => {
     return playMutation.data?.data?.score.score;
   }, [currentScore, playMutation.data?.data?.score, isReadyToPlay])
   const myHighScore = Math.max(score || 0, currentScore?.data?.highScore || 0);
-  
+
   return (
     <Row>
       <Col>

@@ -16,7 +16,7 @@ export function withAuth(
         message: 'Unauthorize',
       })
     } catch (e) {
-      console.log('withAuth : error', e);
+      console.error('withAuth : error', e);
       return res.json({
         success: false,
         message: 'Invalid token',
@@ -39,7 +39,7 @@ export function withMethod(
         message: 'Method not allow',
       })
     } catch (e) {
-      console.log('withMethod : error', e);
+      console.error('withMethod : error', e);
       return res.json({
         success: false,
         message: 'Internal error',

@@ -117,8 +117,6 @@ async function getRecordsByColumn<T>(
     if (offset !== undefined) {
       query += ` OFFSET ${offset}`;
     }
-    console.log('query',query);
-    
     const record = await db.many<T>(query, value);
     return record;
   } catch (error) {
