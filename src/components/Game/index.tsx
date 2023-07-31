@@ -78,13 +78,14 @@ const Game = () => {
     )
   }
 
-  const isReadyToPlay = currentScore?.data?.id !== undefined;
+  const isReadyToPlay = currentScore?.data?.score?.id !== undefined;
   const score = React.useMemo(() => {
     if (!isReadyToPlay) return 0;
-    if (!playMutation.data?.data?.score) return currentScore?.data?.score;
+    if (!playMutation.data?.data?.score) return currentScore?.data?.score?.score;
     return playMutation.data?.data?.score.score;
   }, [currentScore, playMutation.data?.data?.score, isReadyToPlay])
-
+  const myHighScore = Math.max(score || 0, currentScore?.data?.highScore || 0);
+  
   return (
     <Row>
       <Col>
@@ -92,13 +93,13 @@ const Game = () => {
           <Statistic
             title="Score"
             value={score}
-            loading={playMutation.isLoading}
+            loading={isFetching}
             style={{ width: 80 }}
           />
           <Statistic
             title="Highscore"
-            value={score}
-            loading={playMutation.isLoading}
+            value={myHighScore}
+            loading={isFetching}
             style={{ width: 80 }}
           />
         </Space>

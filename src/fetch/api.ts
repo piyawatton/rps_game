@@ -20,7 +20,10 @@ export async function register(payload: User) {
 }
 
 export async function playStatus() {
-  const res = await AxiosInstance.get<BaseResponse<Score | null>>('/api/play');
+  const res = await AxiosInstance.get<BaseResponse<{
+    score: Score | null;
+    highScore: number;
+  }>>('/api/play');
   return res.data
 }
 

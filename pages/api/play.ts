@@ -14,6 +14,7 @@ import Score from '@/src/type/Score';
 import { Choice, OrderByDirection, PlayResult, ScoreStatus } from '@/src/type/enum';
 import ScoreLog from '@/src/type/ScoreLog';
 import { determineAction } from '@/src/services/play';
+import db from '@/src/utils/db';
 
 const playing = async (req: NextApiRequest, res: NextApiResponse) => {
   const scoreId = req.body.score_id || '';
@@ -131,9 +132,17 @@ const startPlay = async (req: NextApiRequest, res: NextApiResponse) => {
 const playStatus = async (req: NextApiRequest, res: NextApiResponse) => {
   const jwtData = detachToken(req.headers.authorization || '');
   const currentScore = await getRecordByColumns<Score>('Score', { status: ScoreStatus.ONGOING, user_id: jwtData.userId });
+  const myHighScore = await db.any(`
+    SELECT MAX(score) AS highest_score
+    FROM "Score" s 
+    WHERE user_id = 'a4d5f880-9c9c-4f69-aa80-fd2989163d2d';
+  `);
   return res.json({
     success: true,
-    data: currentScore,
+    data: {
+      score: currentScore,
+      highScore: myHighScore && myHighScore[0] && myHighScore[0].highest_score || 0,
+    },
   })
 }
 

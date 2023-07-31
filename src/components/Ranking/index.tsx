@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Name, Rank, RankingItemContainer, Score } from '../RankingItem';
 import { useQuery } from '@tanstack/react-query';
 import { getRanking } from '@/src/fetch/api';
+import { Spin } from 'antd';
 
 interface IRankingProps {
 }
@@ -15,10 +16,10 @@ const getMedal = (rank: number) => {
 };
 
 const Ranking: React.FunctionComponent<IRankingProps> = (props) => {
-  const { data: ranking } = useQuery(['ranking'], getRanking, {
+  const { data: ranking, isFetching } = useQuery(['ranking'], getRanking, {
   })
   return (
-    <div>
+    <Spin spinning={isFetching}>
       {ranking?.data?.map((score, index) => (
         <RankingItemContainer>
           <Rank>{getMedal(index + 1)}</Rank>
@@ -26,7 +27,7 @@ const Ranking: React.FunctionComponent<IRankingProps> = (props) => {
           <Score>{score.score}</Score>
         </RankingItemContainer>
       ))}
-    </div>
+    </Spin>
   );
 };
 

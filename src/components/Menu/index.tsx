@@ -7,6 +7,7 @@ import TrophyFilled from '@ant-design/icons/lib/icons/TrophyFilled';
 import { useRouter } from 'next/navigation';
 import cookieUtils from '@/src/utils/cookies';
 import Ranking from '../Ranking';
+import { TOP_N_HIGH_SCORE } from '@/src/config/global';
 
 interface IMenuProps {
 }
@@ -41,7 +42,7 @@ const Menu: React.FunctionComponent<IMenuProps> = (props) => {
         <FloatButton icon={<TrophyFilled />} onClick={() => { showDrawer(); }} />
         <FloatButton icon={<PoweroffOutlined />} onClick={onLogout} />
       </FloatButton.Group>
-      <Drawer title={<h4>🎉🏆 Top 10 Ranking 🏆🎉</h4>} placement="right" onClose={onClose} open={open}>
+      <Drawer title={<h4>🎉🏆 Top {TOP_N_HIGH_SCORE} Ranking 🏆🎉</h4>} placement="right" onClose={onClose} open={open}>
         <Ranking />
       </Drawer>
     </>
