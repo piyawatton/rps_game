@@ -2,7 +2,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 export const AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
 })
 
 AxiosInstance.interceptors.response.use(

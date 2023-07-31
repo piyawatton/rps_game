@@ -135,7 +135,7 @@ const playStatus = async (req: NextApiRequest, res: NextApiResponse) => {
   const myHighScore = await db.any(`
     SELECT MAX(score) AS highest_score
     FROM "Score" s 
-    WHERE user_id = 'a4d5f880-9c9c-4f69-aa80-fd2989163d2d';
+    WHERE user_id = '${jwtData.userId}';
   `);
   return res.json({
     success: true,
