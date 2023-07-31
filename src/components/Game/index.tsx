@@ -157,17 +157,18 @@ const Game = () => {
             </div>
           ) : (
             <div>
-              <Button
-                size="large"
-                disabled={isFetching}
-                onClick={() => {
-                  playMutation.reset();
-                  gameStartMutation.mutate();
-                }}
-              >
-                <Spin spinning={isFetching} />
-                {isFetching ? 'Loading..' : 'Start'}
-              </Button>
+              <Spin spinning={isFetching || gameStartMutation.isLoading}>
+                <Button
+                  size="large"
+                  disabled={isFetching}
+                  onClick={() => {
+                    playMutation.reset();
+                    gameStartMutation.mutate();
+                  }}
+                >
+                  {isFetching ? 'Loading..' : 'Start'}
+                </Button>
+              </Spin>
             </div>
           )}
         </div>
