@@ -6,7 +6,7 @@ export const Background = styled.div`
 `;
 export const Container = styled.div`
   max-width: 1200px;
-  min-height: 100dvh;
+  min-height: calc(100dvh - 64px);
   background-color: white;
   margin: auto;
 `;
@@ -14,12 +14,12 @@ export const Padding = styled.div`
   padding: 50px;
 `;
 export const FullScreenHeight = styled.div`
-  height: 100dvh;
+  height: calc(100dvh - 64px);
 `;
 export const ContentCenter = styled.div`
   display: flex;
   justify-content: center;
-  height: 100dvh;
+  height: calc(100dvh - 64px);
   align-items: center;
 `;
 export const TextCenter = styled.div`
