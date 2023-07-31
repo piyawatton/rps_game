@@ -7,17 +7,20 @@ import {
   Spin,
   Space,
 } from 'antd';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { play, playStatus, start } from '@/src/fetch/api';
 import { Choice, ScoreStatus } from '@/src/type/enum';
 import ScoreLogList from '../ScoreLog';
+import { styled } from 'styled-components';
+
+const GameButton = styled(Button)`
+  height: fit-content !important;
+`
 
 const Game = () => {
-  const router = useRouter();
 
   const { data: currentScore, isFetching, refetch: fetchPlayStatus } = useQuery(['playStatus'], playStatus, { refetchOnWindowFocus: false })
   const playMutation = useMutation(
@@ -27,13 +30,6 @@ const Game = () => {
       onSuccess: (data) => {
         if (data.success) {
           if (data.data?.score.status === ScoreStatus.ONGOING) {
-            // return notification.info({
-            //   message: (
-            //     <>
-            //       {data.data?.result}
-            //     </>
-            //   )
-            // });
             return;
           }
           Modal.info({
@@ -43,7 +39,11 @@ const Game = () => {
                 <ScoreLogList data={data.data?.scoreLog || []} />
               </div>
             ),
-            onOk() { fetchPlayStatus() },
+            onOk() {
+              fetchPlayStatus();
+              playMutation.reset();
+              gameStartMutation.reset();
+            },
           });
 
           return;
@@ -66,15 +66,19 @@ const Game = () => {
 
   const renderChoice = (choice: Choice) => {
     return (
-      <Image
+      <GameButton
+        type="dashed"
         onClick={() => {
           playMutation.mutate({ player_action: choice, score_id: currentScore?.data?.score?.id })
         }}
-        src={`/assets/${choice.toLowerCase()}.png`}
-        alt={`/assets/${choice.toLowerCase()}.png`}
-        width={80}
-        height={80}
-      />
+      >
+        <Image
+          src={`/assets/${choice.toLowerCase()}.png`}
+          alt={`/assets/${choice.toLowerCase()}.png`}
+          width={80}
+          height={80}
+        />
+      </GameButton>
     )
   }
 
@@ -85,7 +89,6 @@ const Game = () => {
     return playMutation.data?.data?.score.score;
   }, [currentScore, playMutation.data?.data?.score, isReadyToPlay])
   const myHighScore = Math.max(score || 0, currentScore?.data?.highScore || 0);
-
   return (
     <Row>
       <Col>
@@ -106,10 +109,20 @@ const Game = () => {
         <div>
           {isReadyToPlay ? (
             <div>
+              <div style={{
+                height: 170,
+                textAlign: 'center',
+                width: 200,
+                margin: 'auto',
+              }}>
+                <ScoreLogList data={playMutation.data?.data?.scoreLog.slice(0, 1) || []} loading={playMutation.isLoading} />
+              </div>
               <Spin spinning={playMutation.isLoading}>
-                {renderChoice(Choice.ROCK)}
-                {renderChoice(Choice.PAPER)}
-                {renderChoice(Choice.SCISSORS)}
+                <Space>
+                  {renderChoice(Choice.ROCK)}
+                  {renderChoice(Choice.PAPER)}
+                  {renderChoice(Choice.SCISSORS)}
+                </Space>
               </Spin>
             </div>
           ) : (
@@ -117,7 +130,10 @@ const Game = () => {
               <Button
                 size="large"
                 disabled={isFetching}
-                onClick={() => { gameStartMutation.mutate() }}
+                onClick={() => {
+                  playMutation.reset();
+                  gameStartMutation.mutate();
+                }}
               >
                 <Spin spinning={isFetching} />
                 {isFetching ? 'Loading..' : 'Start'}

@@ -8,9 +8,10 @@ import { PlayResult } from '@/src/type/enum';
 
 interface ScoreLogListProps {
   data: ScoreLog[];
+  loading?: boolean;
 }
 
-const getType = (result:PlayResult) => {
+const getType = (result: PlayResult) => {
   switch (result) {
     case PlayResult.WIN:
       return 'success';
@@ -21,10 +22,11 @@ const getType = (result:PlayResult) => {
   }
 }
 
-const ScoreLogList: React.FC<ScoreLogListProps> = ({ data }) => {
+const ScoreLogList: React.FC<ScoreLogListProps> = ({ data, loading }) => {
 
   return (
     <List
+      loading={loading}
       dataSource={data}
       renderItem={(item) => {
         const result = determineAction(item.player_action, item.bot_action)
