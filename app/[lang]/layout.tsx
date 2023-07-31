@@ -1,14 +1,14 @@
 'use client'
 
-import { FloatButton, Modal } from 'antd';
+import { FloatButton, Modal, Layout } from 'antd';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import PoweroffOutlined from '@ant-design/icons/lib/icons/PoweroffOutlined';
 import cookieUtils from '@/src/utils/cookies';
 import TrophyFilled from '@ant-design/icons/lib/icons/TrophyFilled';
+import Logo from '@/src/components/Logo';
 
 export default function RootLayout({
-  children, // will be a page or nested layout
+  children,
 }: {
   children: React.ReactNode
 }) {
@@ -24,18 +24,24 @@ export default function RootLayout({
     })
   }
   return (
-    <section>
-      {children}
-      <FloatButton.Group
-        trigger="click"
-        type="primary"
+    <Layout>
+      <Layout.Header
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+        }}
       >
-        <FloatButton icon={(
-          <Image src="/assets/paper.png" alt="logo" width={21} height={21} />
-        )} onClick={() => { router.push('/play') }} />
+        <Logo />
+      </Layout.Header>
+      {children}
+      <FloatButton.Group type="primary">
         <FloatButton icon={<TrophyFilled />} onClick={() => { router.push('/ranking') }} />
         <FloatButton icon={<PoweroffOutlined />} onClick={onLogout} />
       </FloatButton.Group>
-    </section>
+    </Layout>
   )
 }
