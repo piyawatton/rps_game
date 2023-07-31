@@ -9,19 +9,24 @@ import {
 } from 'antd';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import ConfettiExplosion from 'react-confetti-explosion';
 import React from 'react';
 
 import { play, playStatus, start } from '@/src/fetch/api';
-import { Choice, ScoreStatus } from '@/src/type/enum';
+import { Choice, PlayResult, ScoreStatus } from '@/src/type/enum';
 import ScoreLogList from '../ScoreLog';
-import { styled } from 'styled-components';
+import { styled, useTheme } from 'styled-components';
+import { DELAY_PLAY } from '@/src/config/global';
+import { determineAction } from '@/src/services/play';
 
 const GameButton = styled(Button)`
   height: fit-content !important;
 `
 
 const Game = () => {
-
+  const theme = useTheme();
+  const [playable, setPlayable] = React.useState<boolean>(true);
+  const [isWinRound, setIsWinRound] = React.useState<boolean>(false);
   const { data: currentScore, isFetching, refetch: fetchPlayStatus } = useQuery(['playStatus'], playStatus, { refetchOnWindowFocus: false })
   const playMutation = useMutation(
     play,
@@ -30,6 +35,10 @@ const Game = () => {
       onSuccess: (data) => {
         if (data.success) {
           if (data.data?.score.status === ScoreStatus.ONGOING) {
+            setPlayable(false);
+            const scoreLog = data.data.scoreLog[0]
+            setIsWinRound(determineAction(scoreLog.player_action, scoreLog.bot_action) === PlayResult.WIN)
+
             return;
           }
           Modal.info({
@@ -67,6 +76,7 @@ const Game = () => {
   const renderChoice = (choice: Choice) => {
     return (
       <GameButton
+        disabled={!playable}
         type="dashed"
         onClick={() => {
           playMutation.mutate({ player_action: choice, score_id: currentScore?.data?.score?.id })
@@ -81,6 +91,14 @@ const Game = () => {
       </GameButton>
     )
   }
+
+  React.useEffect(() => {
+    if (!playable) {
+      setTimeout(() => {
+        setPlayable(true);
+      }, DELAY_PLAY);
+    }
+  }, [playable])
 
   const isReadyToPlay = currentScore?.data?.score?.id !== undefined;
   const score = React.useMemo(() => {
@@ -114,7 +132,19 @@ const Game = () => {
                 textAlign: 'center',
                 width: 200,
                 margin: 'auto',
+                position: 'relative',
               }}>
+                {!playable && isWinRound && (
+                  <div style={{ position: 'absolute', left: '50%' }}>
+                    <ConfettiExplosion
+                      force={0.4}
+                      duration={2200}
+                      particleCount={30}
+                      width={400}
+                      colors={Object.values(theme)}
+                    />
+                  </div>
+                )}
                 <ScoreLogList data={playMutation.data?.data?.scoreLog.slice(0, 1) || []} loading={playMutation.isLoading} />
               </div>
               <Spin spinning={playMutation.isLoading}>
