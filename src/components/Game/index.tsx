@@ -5,6 +5,7 @@ import {
   Statistic, Button,
   Modal,
   Spin,
+  Space,
 } from 'antd';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
@@ -87,12 +88,20 @@ const Game = () => {
   return (
     <Row>
       <Col>
-        <Statistic
-          title="Score"
-          value={score}
-          loading={playMutation.isLoading}
-          style={{ width: 80 }}
-        />
+        <Space>
+          <Statistic
+            title="Score"
+            value={score}
+            loading={playMutation.isLoading}
+            style={{ width: 80 }}
+          />
+          <Statistic
+            title="Highscore"
+            value={score}
+            loading={playMutation.isLoading}
+            style={{ width: 80 }}
+          />
+        </Space>
         <div>
           {isReadyToPlay ? (
             <div>

@@ -15,13 +15,21 @@ import { Choice, OrderByDirection, PlayResult, ScoreStatus } from '@/src/type/en
 import ScoreLog from '@/src/type/ScoreLog';
 import { determineAction } from '@/src/services/play';
 
-const playing = async (req: NextApiRequest, res: NextApiResponse, currentScore: Score) => {
-  const scoreId = currentScore?.id || '';
+const playing = async (req: NextApiRequest, res: NextApiResponse) => {
+  const scoreId = req.body.score_id || '';
   const playerChoice = req.body.player_action;
   if (!playerChoice) {
     return res.json({
       success: false,
       message: 'No player action',
+    })
+  }
+  const currentScore = await getRecordById<Score>('Score', scoreId);
+  const isFoundScore = currentScore && currentScore?.status === ScoreStatus.ONGOING
+  if (!isFoundScore) {
+    return res.json({
+      success: false,
+      message: 'This score has been done.'
     })
   }
   function getRandomChoice(): Choice {
@@ -120,25 +128,21 @@ const startPlay = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
+const playStatus = async (req: NextApiRequest, res: NextApiResponse) => {
   const jwtData = detachToken(req.headers.authorization || '');
+  const currentScore = await getRecordByColumns<Score>('Score', { status: ScoreStatus.ONGOING, user_id: jwtData.userId });
+  return res.json({
+    success: true,
+    data: currentScore,
+  })
+}
+
+export async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'PATCH') {
-    const scoreId = req.body.score_id || '';
-    const currentScore = await getRecordById<Score>('Score', scoreId);
-    if (currentScore && currentScore?.status === ScoreStatus.ONGOING) {
-      return playing(req, res, currentScore);
-    }
-    return res.json({
-      success: false,
-      message: 'This score has been done.'
-    })
+    return playing(req, res)
   }
   if (req.method === 'GET') {
-    const currentScore = await getRecordByColumns<Score>('Score', { status: ScoreStatus.ONGOING, user_id: jwtData.userId });
-    return res.json({
-      success: true,
-      data: currentScore,
-    })
+    return playStatus(req, res)
   }
   if (req.method === 'POST') {
     return startPlay(req, res);
