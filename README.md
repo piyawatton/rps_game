@@ -10,6 +10,7 @@ Git repository [https://github.com/piyawatton/rps_game](https://github.com/piyaw
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Environment variables](#environment-variables)
+  - [Migration script](#migration-script)
   - [Running the Development Server](#running-the-development-server)
 - [Project Structure](#project-structure)
 - [Node module dependencies](#node-module-dependencies)
@@ -55,6 +56,11 @@ NEXT_PUBLIC_TOP_N_HIGH_SCORE=10
 NEXT_PUBLIC_DELAY_PLAY=2000
 ```
 
+### Migration script
+To migrate database, use the following command and change DATABASE_URL variable:
+```bash
+DATABASE_URL=postgres://{{user}}:{{password}}@{{host}}:{{port}}/{{db_name}}?sslmode=require npm run migrate up
+```
 
 ### Running the Development Server
 
